@@ -5,8 +5,13 @@ set -eux
 rm -Rf classes
 mkdir classes
 
+echo 'Clojure dependency tree:'
+clojure -Stree
+
+echo 'Compiling Clojure code to Java class files:'
 clojure -e "(compile 'repro.core)"
 
+echo 'Compiling class files to native image:'
 native-image \
     -cp "$(clojure -Spath):classes" \
     -H:Name=repro \
