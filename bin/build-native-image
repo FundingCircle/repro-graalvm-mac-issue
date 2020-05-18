@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -eux
+
+rm -Rf classes
+mkdir classes
+
+clojure -e "(compile 'repro.core)"
+
+native-image \
+    -cp "$(clojure -Spath):classes" \
+    -H:Name=repro \
+    -H:+ReportExceptionStackTraces \
+    --initialize-at-build-time  \
+    --verbose \
+    --no-fallback \
+    --no-server \
+    "-J-Xms6g" \
+    "-J-Xmx6g" \
+    repro.core
